@@ -57,3 +57,9 @@ const serviceSchema = moongose.Schema(
         timestamps: true,
     }
 );
+
+    // Create the service model using the schema
+    const Service = mongoose.model('Service', serviceSchema);
+
+    module.exports  = Service;
+    
