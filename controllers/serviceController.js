@@ -102,3 +102,9 @@ const updateService = async (req, res) => {
             res.status(500).json({ meaage: error.message });
         }
     };
+
+    module.exports = createService;
+    module.exports = getServices;
+    module.exports = getServiceById;
+    module.exports = updateService;
+    module.exports = deleteService;
