@@ -44,3 +44,18 @@ const getServices = async (req,res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+const getServiceById = async (req, res) => {
+    try {
+        //Find the service by its ID
+        const service = await Service.findById(req.params.id).populate('provider', 'name');
+
+        if (service) {
+            res.json(service);
+        } else {
+            res.status(404).json({ message: 'Service not found'});
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
