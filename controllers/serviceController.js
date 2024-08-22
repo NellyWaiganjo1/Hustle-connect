@@ -85,3 +85,20 @@ const updateService = async (req, res) => {
             res.status(500).json({ message: error.message });
         }
     };
+
+    const deleteService = async(res,req) => {
+        try{
+            //Find service by its ID
+            const service = await Service.findById(req.params.id);
+
+            if(service) {
+                // Remove the service from the database
+                await service.remove();
+                res.json({ message: 'Service removed' });
+            } else {
+                res.status(404).json({ message: 'service not found'});
+            }
+        } catch (error) {
+            res.status(500).json({ meaage: error.message });
+        }
+    };
