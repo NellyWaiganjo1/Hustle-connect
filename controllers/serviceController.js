@@ -59,3 +59,29 @@ const getServiceById = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 };
+
+const updateService = async (req, res) => {
+    try{
+        const { serviceName, description, price,category,location} = req.body;
+
+        //find the service by its ID
+        const service = await Service.findById(req.params.id);
+
+        if (service) {
+            //update the service fields with new data
+            service.serviceName = serviceName || service.serviceName;
+            service.description = description || service.description;
+            service.price = price || service.price;
+            service.category = category || service.category;
+            service.location = location || service.location;
+
+            //save the updated service to the database
+            const updatedService = await service.save();
+            res.json(updatedService);
+        } else {
+            res.status(404).json({ message: 'Service not found'});
+        }
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    };
