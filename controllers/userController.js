@@ -123,3 +123,53 @@ exports.getUserProfile = async (req, res) => {
     }
 };
 
+exports.updateUserProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, email, password, profile, bio, location } = req.body;
+
+        // Find the user by ID
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Check if the email is being updated and if it's already taken
+        if (email && email !== user.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ error: 'Email already in use' });
+            }
+            user.email = email;
+        }
+
+        // Update fields
+        if (name) user.name = name;
+        if (profile) user.profile = profile;
+        if (bio) user.bio = bio;
+        if (location) user.location = location;
+
+        // Handle password update
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(password, salt);
+        }
+
+        // Save the updated user
+        await user.save();
+
+        res.json({
+            message: 'User profile updated successfully',
+            user: {
+                name: user.name,
+                email: user.email,
+                profile: user.profile,
+                bio: user.bio,
+                location: user.location,
+                id: user._id
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update user profile', details: err.message });
+    }
+};
