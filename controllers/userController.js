@@ -52,3 +52,44 @@ exports.register = async (req, res) => {
         res.status(500).json({ error: 'User registration failed', details: err.message });
     }
 };
+
+exports.login = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log('Validation errors:', errors.array());
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    try {
+        let user = await User.findOne({ email });
+        if (!user) {
+            console.log('User not found:', email);
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            console.log('Password mismatch for user:', email);
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        }
+
+        const payload = {
+            user: {
+                id: user.id
+            }
+        };
+
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+            if (err) {
+                console.log('JWT error:', err);
+                throw err;
+            }
+            res.json({ token });
+        });
+    } catch (err) {
+        console.error('Server error:', err.message);
+        res.status(500).send('Server error');
+    }
+};
