@@ -102,3 +102,24 @@ exports.getAllUserProfiles = async (req, res) => {
         res.status(500).json({ error: 'Failed to get user profiles', details: err.message });
     }
 };
+
+exports.getUserProfile = async (req, res) => {
+    try {
+        // Check if the requested user profile matches the authenticated user or if the requesting user is an admin
+        if (req.params.id && req.user.id !== req.params.id) {
+
+            return res.status(403).json({ error: 'Not authorized to view this profile' });
+        }
+
+        const user = await User.findById(req.params.id || req.user.id);
+        
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to get user profile', details: err.message });
+    }
+};
+
