@@ -86,7 +86,7 @@ const updateService = async (req, res) => {
         }
     };
 
-    const deleteService = async(res,req) => {
+    const deleteService = async(req,res) => {
         try{
             //Find service by its ID
             const service = await Service.findById(req.params.id);
@@ -99,12 +99,15 @@ const updateService = async (req, res) => {
                 res.status(404).json({ message: 'service not found'});
             }
         } catch (error) {
-            res.status(500).json({ meaage: error.message });
+            res.status(500).json({ message: error.message });
         }
     };
 
-    module.exports = createService;
-    module.exports = getServices;
-    module.exports = getServiceById;
-    module.exports = updateService;
-    module.exports = deleteService;
+    module.exports = {
+        createService,
+        getServices,
+        getServiceById,
+        updateService,
+        deleteService,
+    };
+    
