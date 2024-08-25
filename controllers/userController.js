@@ -93,3 +93,12 @@ exports.login = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+exports.getAllUserProfiles = async (req, res) => {
+    try {
+        const users = await User.find(); // Get all users
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to get user profiles', details: err.message });
+    }
+};
