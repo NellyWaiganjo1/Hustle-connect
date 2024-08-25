@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Use routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 app.use('/api/services', serviceRouter); // Add the service routes under the /api/services path
 
 // catch 404 and forward to error handler

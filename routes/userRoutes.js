@@ -1,24 +1,32 @@
 const express = require('express');
 const router = express.Router();
+const userController = require('../controllers/userController');
+const { body } = require('express-validator');
+const auth = require('../middleware/auth')
 
-// Import controllers for user profile management
-const {
-    createUserProfile,
-    getUserProfileById,
-    updateUserProfile,
-    deleteUserProfile
-} = require('../controllers/userController');
+// Public routes
+router.post('/register',
+    [
+        body('name').not().isEmpty().withMessage('Name is required'),
+        body('email').isEmail().withMessage('Please include a valid email'),
+        body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
+    ],
+    userController.register
+);
 
-// POST route to create a new user profile
-router.post('/', createUserProfile);
+router.post('/login',
+    [
+        body('email').isEmail().withMessage('Please include a valid email'),
+        body('password').exists().withMessage('Password is required')
+    ],
+    userController.login
+);
 
-// GET route to retrieve a user profile by ID
-router.get('/:id', getUserProfileById);
+// Protected routes
+router.get('/profile', userController.getAllUserProfiles);  
+router.get('/profile/:id', auth, userController.getUserProfile);
+router.put('/profile/:id', auth, userController.updateUserProfile)
+router.delete('/profile/:id', auth, userController.deleteUser);
 
-// PUT route to update a user profile by ID
-router.put('/:id', updateUserProfile);
-
-// DELETE route to remove a user profile by ID
-router.delete('/:id', deleteUserProfile);
 
 module.exports = router;

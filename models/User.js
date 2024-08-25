@@ -24,7 +24,29 @@ const userSchema = new mongoose.Schema({
              type: mongoose.Schema.Types.ObjectId,
              ref: 'Service'
         }
-        ] // Link to services
+        ], // Link to services
+    role: {
+        type: String,
+        enum: ['client', 'service_provider', 'admin'],
+        default: 'client',
+    },
+    profile: {
+        type: String,
+    },
+    bio: {
+        type: String,
+    },
+    location: {
+        type: String,
+    },
+    services: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service',
+    }],
+    ratings: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
+    }],
 },
 { timestamps: true }
 );
