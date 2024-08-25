@@ -1,4 +1,6 @@
 const express = require('express');
+const router = express.Router();
+
 const {
     createService,
     getServices,
@@ -7,16 +9,17 @@ const {
     deleteService,
 } = require ("../controllers/serviceController");
 
-const router = express.Router();
+
 
 // Route for getting all services and creating a new service
-router.route('/').get(getServices).post(protect,createService);
+router.post('/', createService);
 
-//Route for getting, updating and deleting a service by ID
-router
-    .route('/:id')
-    .get(getServiceBYId)
-    .put(updateService)
-    .delete(deleteService);
+router.get('/', getServices);
 
-    module.exports = router;
+router.get('/:id', getServiceById);
+
+router.put('/:id', updateService);
+
+router.delete('/:id', deleteService);
+   
+module.exports = router;

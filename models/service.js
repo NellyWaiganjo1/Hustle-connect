@@ -1,11 +1,11 @@
-const mongoose = require ('moongose');
+const mongoose = require ('mongoose');
 
-const serviceSchema = moongose.Schema(
+const serviceSchema = mongoose.Schema(
     {
         // Name of the service
         serviceName: {
             type: String,
-            require: true,
+            required: true,
         },
         //description of the service
         description:  {
